@@ -8,6 +8,8 @@ clone this environment to the RPi home directory
 *linux*
 cd /home/flashcarpi/
 python3 -m venv ./venv
+```
+```
 *windows*
 cd \path\to\project\flashcarpi
 python3 -m venv venv
@@ -18,6 +20,8 @@ once in the project folder activate the environment
 ```
 *linux*
 source ./venv/bin/activate
+```
+```
 *windows*
 venv\Scripts\activate
 ```
