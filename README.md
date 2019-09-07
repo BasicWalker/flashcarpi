@@ -5,13 +5,17 @@ clone this environment to the RPi home directory
 
 # Create virtual environment using venv
 ```
+*linux*
 cd /home/flashcarpi/
 python3 -m venv ./venv
+*windows*
+cd \path\to\project\flashcarpi
+python3 -m venv venv
 ```
 
 # Get into virtual environment (venv)
+once in the project folder activate the environment
 ```
-cd /home/flashcarpi/
 *linux*
 source ./venv/bin/activate
 *windows*
