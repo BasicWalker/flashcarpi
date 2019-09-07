@@ -1,2 +1,44 @@
 # FlashCarPi
 utilization of a raspberry pi as a dash unit within a car
+
+# Create virtual environment using venv
+```
+cd /home/flashcarpi/
+python3 -m venv ./venv
+```
+
+# Get into virtual environment (venv)
+```
+cd /home/flashcarpi/
+*linux*
+source ./venv/bin/activate
+*windows*
+venv\Scripts\activate
+```
+*should return*
+>`(venv) pi@raspberrypi:~/git/Leeky $ `
+
+
+**check python interpreter and pip location**
+
+*linux*: `which pip3` should return 
+>`/Leeky/venv/bin/pip3`
+
+*windows*: `where pip` should return 
+>`\Leeky\venv\Scripts\pip.exe `
+
+*linux*: `which python` should return 
+>`/Leeky/venv/bin/python`
+
+*windows*: `where python` should return 
+>`\Leeky\venv\Scripts\python.exe`
+
+
+# Install dependencies
+make sure loaction is set in the `Leeky/` folder and the (venv) is active.
+
+run `pip install -r requirements.txt`
+
+**check if dependencies are installed correctly**
+
+`pip list` should return a list of 3rd-party dependencies required for this project
