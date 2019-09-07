@@ -28,21 +28,19 @@ venv\Scripts\activate
 *should return*
 >`(venv) pi@raspberrypi:~/flashcarpi $ `
 
-
 **check python interpreter and pip location**
-
-*linux*: `which pip3` should return 
->`/flashcarpi/venv/bin/pip3`
-
-*windows*: `where pip` should return 
->`\flashcarpi\venv\Scripts\pip.exe `
 
 *linux*: `which python` should return 
 >`/flashcarpi/venv/bin/python`
 
+*linux*: `which pip3` should return 
+>`/flashcarpi/venv/bin/pip3`
+
 *windows*: `where python` should return 
 >`\flashcarpi\venv\Scripts\python.exe`
 
+*windows*: `where pip` should return 
+>`\flashcarpi\venv\Scripts\pip.exe `
 
 # Install dependencies
 make sure loaction is set in the `flashcarpi/` folder and the (venv) is active.
