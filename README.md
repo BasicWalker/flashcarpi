@@ -76,15 +76,20 @@ OBD is a serial port we need to bind it to a port on the pi
 
 `sudo rfcomm bind rfcomm0 <adapter mac address>`
 
- ** to get the bluetooth adapter to connect automatically **
+ **to get the bluetooth adapter to connect automatically**
+ 
  `sudo nano /etc/rc.local`
+ 
  then add the following before `exit 0`
+ 
  `rfcomm bind rfcomm0 <adapter mac address>`
  
  then edit the bluetooth config file
+ 
  `sudo nano /etc/systemd/system/dbus-org.bluez.service`
+ 
  find the line that says "ExecStart=/usr/lib/bluetooth/bluetoothd", and change it to this:
- ```
+```
 ExecStart=/usr/lib/bluetooth/bluetoothd -C
 ExecStartPost=/usr/bin/sdptool add SP
 ```
