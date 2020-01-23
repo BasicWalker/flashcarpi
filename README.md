@@ -51,6 +51,47 @@ run `pip install -r requirements.txt`
 
 `pip list` should return a list of 3rd-party dependencies required for this project
 
+# Setting up I2C
+Open up a terminal window and type:  `sudo raspi-config`
+
+>Choose option: 5 Interfacing Options
+
+>Choose option: P5 I2C and hit enter
+
+>Choose:  <Yes> to turn on the I2C interface
+  
+>Choose: Ok
+
+>Choose:  Finish
+
+Reboot the RPi
+  
+test with
+`ls /dev/*i2c*`
+it should return
+>`/dev/i2c-1`
+
+install the i2c tools to get the command line tools needed to interact with i2c.  `sudo apt-get install -y i2c-tools`
+
+next test for the wired I2c devices `sudo i2cdetect -y 1`
+
+it should return a grid similar to this
+
+
+```
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- 24 -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- 62 -- -- -- -- -- UU -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --  
+```
+the garmin lidar lite has the 0x62 address
+
+
 # Setting up bluetooth OBD II 
 plug the Bluetooth OBD II into the port inside the car
 
