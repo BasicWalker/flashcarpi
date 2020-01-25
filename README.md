@@ -75,6 +75,9 @@ Open up a terminal window and type:  `sudo raspi-config`
 
 >Choose:  Finish
 
+set `dtoverlay=i2c-rtc,pcf8523` to `dtoverlay=i2c-bcm2708`
+this is an older i2c protocol that doesnt default enable repeated start
+
 Reboot the RPi
   
 test with
