@@ -51,6 +51,17 @@ run `pip install -r requirements.txt`
 
 `pip list` should return a list of 3rd-party dependencies required for this project
 
+# Shutdown Script
+move shutdowndowncheck.py to /home/pi/bin/button
+
+tell the RPi to run the script on startup
+
+ run `sudo nano /etc/rc.local` in terminal to edit the file
+ 
+ then add the following before `exit 0`
+ 
+ `python /home/pi/bin/button/shutdowncheck.py &`
+
 # Setting up I2C
 Open up a terminal window and type:  `sudo raspi-config`
 
