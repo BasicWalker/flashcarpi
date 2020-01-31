@@ -26,8 +26,8 @@
    <widget class="QLCDNumber" name="frontspeed">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>30</y>
+      <x>330</x>
+      <y>40</y>
       <width>291</width>
       <height>151</height>
      </rect>
@@ -174,8 +174,8 @@
    <widget class="QLCDNumber" name="carspeed">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>30</y>
+      <x>50</x>
+      <y>40</y>
       <width>291</width>
       <height>151</height>
      </rect>
@@ -185,6 +185,9 @@
       <horstretch>1</horstretch>
       <verstretch>1</verstretch>
      </sizepolicy>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
     </property>
     <property name="styleSheet">
      <string notr="true">QLCDNumber{
@@ -205,9 +208,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>-30</y>
-      <width>821</width>
-      <height>511</height>
+      <y>-80</y>
+      <width>800</width>
+      <height>640</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -237,10 +240,10 @@
    <widget class="QLCDNumber" name="rpm">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>190</y>
-      <width>100</width>
-      <height>78</height>
+      <x>120</x>
+      <y>370</y>
+      <width>111</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -257,20 +260,23 @@
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
     </property>
+    <property name="digitCount">
+     <number>4</number>
+    </property>
     <property name="segmentStyle">
      <enum>QLCDNumber::Flat</enum>
     </property>
     <property name="intValue" stdset="0">
-     <number>5</number>
+     <number>2456</number>
     </property>
    </widget>
    <widget class="QLCDNumber" name="distance">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>210</y>
-      <width>111</width>
-      <height>42</height>
+      <x>550</x>
+      <y>370</y>
+      <width>121</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -293,20 +299,127 @@
      <enum>QFrame::NoFrame</enum>
     </property>
     <property name="smallDecimalPoint">
-     <bool>false</bool>
+     <bool>true</bool>
+    </property>
+    <property name="digitCount">
+     <number>5</number>
+    </property>
+    <property name="mode">
+     <enum>QLCDNumber::Dec</enum>
     </property>
     <property name="segmentStyle">
      <enum>QLCDNumber::Flat</enum>
     </property>
     <property name="value" stdset="0">
-     <double>10.000000000000000</double>
+     <double>23.000000000000000</double>
+    </property>
+    <property name="intValue" stdset="0">
+     <number>23</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="rpm_meter">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-80</y>
+      <width>800</width>
+      <height>640</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::RichText</enum>
+    </property>
+    <property name="pixmap">
+     <pixmap>FlashCarPi/assets/3_5rpm.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="openExternalLinks">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="dist_meter">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-80</y>
+      <width>800</width>
+      <height>640</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::RichText</enum>
+    </property>
+    <property name="pixmap">
+     <pixmap>FlashCarPi/assets/7_5dist.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="openExternalLinks">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="frontcar">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-80</y>
+      <width>800</width>
+      <height>640</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>FlashCarPi/assets/frontcar.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QLabel" name="okaystat">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-80</y>
+      <width>800</width>
+      <height>640</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>FlashCarPi/assets/ok.png</pixmap>
     </property>
    </widget>
    <zorder>Background</zorder>
+   <zorder>dist_meter</zorder>
+   <zorder>rpm_meter</zorder>
    <zorder>frontspeed</zorder>
    <zorder>rpm</zorder>
    <zorder>distance</zorder>
    <zorder>carspeed</zorder>
+   <zorder>frontcar</zorder>
+   <zorder>okaystat</zorder>
   </widget>
  </widget>
  <resources/>
