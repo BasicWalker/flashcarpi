@@ -56,9 +56,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def dist_meter_path(self, distance):
         nearest_dist = 2.5 * round(distance/2.5)
-        bar_measure = str(nearest_dist).replace(".0", "")
-        bar_measure = bar_measure.replace(".", "_")
-        png_path = asset_path / (bar_measure + 'dist.png')
+        bar_measure_dist = str(nearest_dist).replace(".0", "")
+        bar_measure_dist = bar_measure_dist.replace(".", "_")
+        png_path = asset_path / (bar_measure_dist + 'dist.png')
+        return str(png_path)
+
+    def rpm_meter_path(self, rpm):
+        nearest_rpm = 500 * round(rpm/500)
+        bar_measure_rpm = str(nearest_rpm).replace(".0", "")
+        png_path = asset_path / (bar_measure_rpm + 'rpm.png')
         return str(png_path)
 
     def speed_diff(self, carspeed, frontcarspeed):
@@ -89,6 +95,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             rpm1 = self.connection.query(obd.commands.RPM).value.magnitude
             self.carspeed.setProperty("value", speed)
             self.rpm.setProperty("value", rpm1)
+            self.rpm_meter.setPixmap(QtGui.QPixmap(self.rpm_meter_path(rpm1)))
         
         except:
             self.carspeed.setProperty("intvalue", 999)
