@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 import obd
 from PyQt5 import QtWidgets, QtCore, QtGui
@@ -11,20 +12,26 @@ from pathlib import Path
 
 
 from Ui_MainWindow import Ui_MainWindow
-from serial_test import readLidar
-from obd_read import get_rpm, get_speed
+##from serial_test import readLidar
+##from obd_read import get_rpm, get_speed
 
 asset_path = Path('assets/')
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     
     def __init__(self, parent=None):
+        global speed, rpm
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         # self.createGraphicView()
-        # self.showFullScreen() 
+##        self.showFullScreen() 
 ##        self.connection = obd.Async(fast=False, timeout=30)
+        self.connection = obd.OBD(fast=False, timeout=30)
+##        self.connection.watch(obd.commands.SPEED, callback=self.get_speed)
+##        self.connection.watch(obd.commands.RPM, callback=self.get_rpm)
 ##        self.connection.start()
+##        self.speed = 42
+##        self.rpm1 = 0
         self.update()
 
     # def createGraphicView(self):
@@ -38,18 +45,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #     self.gaugeline.setTransformOriginPoint(399, 196)
 
     def update(self):
-        global speed
-        speed = 10  # for testing
-##        self.update_car()
-        self.update_carfront()
-        
-        
-        carspeedreading = -30  # for testing 
+        self.update_car()
+##        self.update_carfront()
         # self.gaugeline.setRotation(self.speed_diff(carspeedreading, frontspeedreading))
-        if int(frontspeedreading) == int(carspeedreading):
-            self.okaystat.setPixmap(QtGui.QPixmap(str(asset_path / 'ok.png')))
-        else:
-            self.okaystat.setPixmap(QtGui.QPixmap(''))
+##        if int(frontspeedreading) == int(carspeedreading):
+##            self.okaystat.setPixmap(QtGui.QPixmap(str(asset_path / 'ok.png')))
+##        else:
+##            self.okaystat.setPixmap(QtGui.QPixmap(''))
                 
 
     def dist_meter_path(self, distance):
@@ -82,14 +84,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print("ouch")
 
     def update_car(self):
-        global speed
-        self.connection.watch(obd.commands.SPEED, callback=get_speed)
-        self.connection.watch(obd.commands.RPM, callback=get_rpm)
-        self.carspeed.setProperty("intvalue", int(speed))
-        self.rpm.setProperty("intvalue", int(rpm))
-        # except:
-        #     self.carspeed.setProperty("intvalue", 999)
-        #     self.rpm.setProperty("intvalue", 999)
-        #     print("obd update failed")
+        try:
+            speed = self.connection.query(obd.commands.SPEED).value.to("mph").magnitude
+            rpm1 = self.connection.query(obd.commands.RPM).value.magnitude
+            self.carspeed.setProperty("value", speed)
+            self.rpm.setProperty("value", rpm1)
+        
+        except:
+            self.carspeed.setProperty("intvalue", 999)
+            self.rpm.setProperty("intvalue", 999)
+            print("obd update failed")
+
+##    def get_speed(self, s):
+##        if not s.is_null():
+##            self.speed = int(s.value.to("mph").magnitude)  # MPH conversion
+##
+##    def get_rpm(self, r):
+##        if not r.is_null():
+##            self.rpm1 = int(r.value.magnitude)
 
         
