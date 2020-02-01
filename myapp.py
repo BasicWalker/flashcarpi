@@ -2,10 +2,9 @@
 import sys
 import obd
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import Qt, pyqtSlot, QCoreApplication
 from PyQt5.QtWidgets import QMainWindow, QGraphicsView, QGraphicsScene
-from PyQt5.QtGui import QPen,  QPixmap
-from PyQt5.QtCore import  Qt
+from PyQt5.QtGui import QPen,  QPixmap  
 from PyQt5.Qt import Qt
 from pathlib import Path
 
@@ -23,6 +22,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         global speed, rpm
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
+        self.pushButton.clicked.connect(QCoreApplication.instance().quit)
         # self.createGraphicView()
 ##        self.showFullScreen() 
 ##        self.connection = obd.Async(fast=False, timeout=30)
@@ -45,6 +45,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #     self.gaugeline.setTransformOriginPoint(399, 196)
 
     def update(self):
+        # pass
         self.update_car()
 ##        self.update_carfront()
         # self.gaugeline.setRotation(self.speed_diff(carspeedreading, frontspeedreading))
@@ -110,4 +111,3 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 ##        if not r.is_null():
 ##            self.rpm1 = int(r.value.magnitude)
 
-        
