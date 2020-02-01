@@ -8,6 +8,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from pathlib import Path
+
+asset_path = Path('assets/')
 
 
 class Ui_MainWindow(object):
@@ -98,7 +101,7 @@ class Ui_MainWindow(object):
         self.Background.setFont(font)
         self.Background.setStyleSheet("color: rgb(45, 226, 230);")
         self.Background.setText("")
-        self.Background.setPixmap(QtGui.QPixmap("FlashCarPi/assets/flashretrobackground.jpg"))
+        self.Background.setPixmap(QtGui.QPixmap(str(asset_path / "flashretrobackground.jpg")))
         self.Background.setAlignment(QtCore.Qt.AlignCenter)
         self.Background.setObjectName("Background")
         self.rpm = QtWidgets.QLCDNumber(self.centralwidget)
@@ -143,7 +146,7 @@ class Ui_MainWindow(object):
         self.rpm_meter.setStyleSheet("")
         self.rpm_meter.setText("")
         self.rpm_meter.setTextFormat(QtCore.Qt.RichText)
-        self.rpm_meter.setPixmap(QtGui.QPixmap("FlashCarPi/assets/3_5rpm.png"))
+        self.rpm_meter.setPixmap(QtGui.QPixmap(str(asset_path / "0rpm.png")))
         self.rpm_meter.setScaledContents(False)
         self.rpm_meter.setOpenExternalLinks(False)
         self.rpm_meter.setObjectName("rpm_meter")
@@ -153,19 +156,19 @@ class Ui_MainWindow(object):
         self.dist_meter.setStyleSheet("")
         self.dist_meter.setText("")
         self.dist_meter.setTextFormat(QtCore.Qt.RichText)
-        self.dist_meter.setPixmap(QtGui.QPixmap("FlashCarPi/assets/7_5dist.png"))
+        self.dist_meter.setPixmap(QtGui.QPixmap(str(asset_path / "0dist.png")))
         self.dist_meter.setScaledContents(False)
         self.dist_meter.setOpenExternalLinks(False)
         self.dist_meter.setObjectName("dist_meter")
         self.frontcar = QtWidgets.QLabel(self.centralwidget)
         self.frontcar.setGeometry(QtCore.QRect(0, -80, 800, 640))
         self.frontcar.setText("")
-        self.frontcar.setPixmap(QtGui.QPixmap("FlashCarPi/assets/frontcar.png"))
+        self.frontcar.setPixmap(QtGui.QPixmap(str(asset_path / "frontcar.png")))
         self.frontcar.setObjectName("frontcar")
         self.okaystat = QtWidgets.QLabel(self.centralwidget)
         self.okaystat.setGeometry(QtCore.QRect(0, -80, 800, 640))
         self.okaystat.setText("")
-        self.okaystat.setPixmap(QtGui.QPixmap("FlashCarPi/assets/ok.png"))
+        self.okaystat.setPixmap(QtGui.QPixmap(str(asset_path / "ok.png")))
         self.okaystat.setObjectName("okaystat")
         self.Background.raise_()
         self.dist_meter.raise_()

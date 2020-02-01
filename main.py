@@ -12,4 +12,4 @@ if __name__ == "__main__":
     timer = QTimer()
     timer.timeout.connect(ui.update_lcd)
     timer.start(20)
-    sys.exit(app.exec_())
+    sys.exit(app.exec_()) 
