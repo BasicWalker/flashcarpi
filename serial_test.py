@@ -1,6 +1,6 @@
 import serial
 
-ser = serial.Serial("com4", timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
+ser = serial.Serial("/dev/ttyACM1", timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
 
 def readLidar():

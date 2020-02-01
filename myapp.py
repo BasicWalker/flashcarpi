@@ -23,8 +23,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         # self.createGraphicView()
         # self.showFullScreen() 
-        self.connection = obd.Async(fast=False, timeout=30)
-        self.connection.start()
+##        self.connection = obd.Async(fast=False, timeout=30)
+##        self.connection.start()
         self.update()
 
     # def createGraphicView(self):
@@ -40,45 +40,42 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def update(self):
         global speed
         speed = 10  # for testing
-        self.update_car()
+##        self.update_car()
         self.update_carfront()
         
         
-        # carspeedreading = -30  # for testing 
+        carspeedreading = -30  # for testing 
         # self.gaugeline.setRotation(self.speed_diff(carspeedreading, frontspeedreading))
-        # if int(frontspeedreading) == int(carspeedreading):
-        #         self.okaystat.setPixmap(QtGui.QPixmap(str(asset_path / 'ok.png')))
-        # else:
-        #     self.okaystat.setPixmap(QtGui.QPixmap(''))
+        if int(frontspeedreading) == int(carspeedreading):
+            self.okaystat.setPixmap(QtGui.QPixmap(str(asset_path / 'ok.png')))
+        else:
+            self.okaystat.setPixmap(QtGui.QPixmap(''))
                 
 
     def dist_meter_path(self, distance):
-        png_path = asset_path / (str(distance) + 'dist.png')
+        nearest_dist = 2.5 * round(distance/2.5)
+        bar_measure = str(nearest_dist).replace(".0", "")
+        bar_measure = bar_measure.replace(".", "_")
+        png_path = asset_path / (bar_measure + 'dist.png')
         return str(png_path)
 
     def speed_diff(self, carspeed, frontcarspeed):
         speed_diff = int(((carspeed - int(frontcarspeed))/ 2 ))
         speed_diff1 = frontcarspeed
-        print(speed_diff1)
-        print(speed_diff)
-
-
-
         return float(speed_diff)
 
     def update_carfront(self):
-        global distance, frontspeedreading, speed
+        global distance, frontspeedreading
         try:
             distance, frontspeedreading = readLidar()
-            frontspeedreading += speed
             self.distance.setProperty("value", distance)
             self.frontspeed.setProperty("intValue", frontspeedreading)
-            self.dist_meter.setPixmap(QtGui.QPixmap(self.dist_meter_path(distance)))
+##            self.dist_meter.setPixmap(QtGui.QPixmap(self.dist_meter_path(distance)))
             self.frontcar.setGeometry(0, (10 - (int(distance) * 90 / 40)), 800, 640)
         except TypeError:
             self.distance.setProperty("intvalue", 999)
             self.frontspeed.setProperty("intValue", 999)
-            self.dist_meter.setPixmap(QtGui.QPixmap(Path(str(asset_path / '0dist.png'))))
+            self.dist_meter.setPixmap(QtGui.QPixmap(''))
             self.frontcar.setPixmap(QtGui.QPixmap(''))
             self.okaystat.setPixmap(QtGui.QPixmap(Path(str(asset_path / 'error.png'))))
             self.gaugeline.setRotation(0)
