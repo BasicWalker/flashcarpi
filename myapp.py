@@ -25,7 +25,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.pushButton.clicked.connect(QCoreApplication.instance().quit)
         # self.createGraphicView()
-##        self.showFullScreen() 
+        self.showFullScreen()
+        self.setCursor(Qt.BlankCursor)
 ##        self.connection = obd.Async(fast=False, timeout=30)
         try:
             self.connection = obd.OBD(fast=False, timeout=5)
@@ -104,8 +105,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             speed = self.connection.query(obd.commands.SPEED).value.to("mph").magnitude
             rpm1 = self.connection.query(obd.commands.RPM).value.magnitude
-            self.carspeed.setProperty("value", speed)
-            self.rpm.setProperty("value", rpm1)
+            self.carspeed.setProperty("value", int(speed))
+            self.rpm.setProperty("value", (rpm1))
             self.rpm_meter.setPixmap(QtGui.QPixmap(self.rpm_meter_path(rpm1)))
         
         except:
