@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 from Ui_MainWindow import Ui_MainWindow
-##from serial_test import readLidar
+from read_lidar import readLidar
 ##from obd_read import get_rpm, get_speed
 
 asset_path = Path('assets/')
@@ -19,7 +19,7 @@ asset_path = Path('assets/')
 class MainWindow(QMainWindow, Ui_MainWindow):
     
     def __init__(self, parent=None):
-        global speed, rpm
+        global speed, rpm, distance, frontspeedreading
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         self.pushButton.clicked.connect(QCoreApplication.instance().quit)
@@ -48,7 +48,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def update(self):
         # pass
         self.update_car()
-##        self.update_carfront()
+        self.update_carfront()
         # self.gaugeline.setRotation(self.speed_diff(carspeedreading, frontspeedreading))
 ##        if int(frontspeedreading) == int(carspeedreading):
 ##            self.okaystat.setPixmap(QtGui.QPixmap(str(asset_path / 'ok.png')))
@@ -75,20 +75,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return float(speed_diff)
 
     def update_carfront(self):
-        global distance, frontspeedreading
         try:
             distance, frontspeedreading = readLidar()
             self.distance.setProperty("value", distance)
             self.frontspeed.setProperty("intValue", frontspeedreading)
 ##            self.dist_meter.setPixmap(QtGui.QPixmap(self.dist_meter_path(distance)))
-            self.frontcar.setGeometry(0, (10 - (int(distance) * 90 / 40)), 800, 640)
+##            self.frontcar.setGeometry(0, (10 - (int(distance) * 90 / 40)), 800, 640)
         except TypeError:
             self.distance.setProperty("intvalue", 999)
             self.frontspeed.setProperty("intValue", 999)
-            self.dist_meter.setPixmap(QtGui.QPixmap(''))
-            self.frontcar.setPixmap(QtGui.QPixmap(''))
-            self.okaystat.setPixmap(QtGui.QPixmap(Path(str(asset_path / 'error.png'))))
-            self.gaugeline.setRotation(0)
+##            self.dist_meter.setPixmap(QtGui.QPixmap(''))
+##            self.frontcar.setPixmap(QtGui.QPixmap(''))
+##            self.okaystat.setPixmap(QtGui.QPixmap(Path(str(asset_path / 'error.png'))))
+##            self.gaugeline.setRotation(0)
             print("ouch")
 
     def update_car(self):
