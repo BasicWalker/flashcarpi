@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 import obd
+import serial
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt, pyqtSlot, QCoreApplication
 from PyQt5.QtWidgets import QMainWindow, QGraphicsView, QGraphicsScene
@@ -26,7 +27,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.createGraphicView()
 ##        self.showFullScreen() 
 ##        self.connection = obd.Async(fast=False, timeout=30)
-        self.connection = obd.OBD(fast=False, timeout=30)
+        try:
+            self.connection = obd.OBD(fast=False, timeout=5)
+        except:
+            print("OBD not found")
+            pass
+        try:
+            ser = serial.Serial("/dev/ttyUSB0", timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
+            ser.flushInput()
+        except:
+            print("Lidar Serial USB0 connection missing")
+            pass
 ##        self.connection.watch(obd.commands.SPEED, callback=self.get_speed)
 ##        self.connection.watch(obd.commands.RPM, callback=self.get_rpm)
 ##        self.connection.start()
@@ -87,7 +98,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 ##            self.frontcar.setPixmap(QtGui.QPixmap(''))
 ##            self.okaystat.setPixmap(QtGui.QPixmap(Path(str(asset_path / 'error.png'))))
 ##            self.gaugeline.setRotation(0)
-            print("ouch")
+            print("Lidar update failed")
 
     def update_car(self):
         try:
