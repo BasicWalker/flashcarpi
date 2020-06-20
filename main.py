@@ -21,6 +21,6 @@ if __name__ == "__main__":
 
     timer = QTimer()
     timer.timeout.connect(ui.update)
-    timer.start(100)
+    timer.start(20)
     sys.exit(app.exec_()) 
 
