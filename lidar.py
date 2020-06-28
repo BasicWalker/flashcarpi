@@ -12,28 +12,25 @@ def read():
     except:
         pass
 
-def check(correct_port="ttyUSB0", interval=0.1):
+def check(correct_port="ttyUSB0", interval=1):
     global serial_ports, arduino_port, lidar_status
     serial_ports = [tuple(p) for p in list(serial.tools.list_ports.comports())]
     while True:
         serial_ports = [tuple(p) for p in list(serial.tools.list_ports.comports())]
         if correct_port not in serial_ports:
-            lidar_status = 0
+            return 0
+            break
         elif ser.readline() == "Read fail":
-            lidar_status = 2
+            return 2
         else:
-            lidar_status = 1
+            return 1
         time.sleep(interval)
 
 def connect(port="ttyUSB0"):
     global ser, lidar_status
-    try:
-        ser = serial.Serial(f"/dev/{port}", timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
-        ser.flushInput()
-    except:
-        lidar_status = 0
-    else:
-        lidar_status = 2
+    ser = serial.Serial(f"/dev/{port}", timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
+    ser.flushInput()
+
 
 class NoSerialConnection(Exception):
     def __init__(self, port):
@@ -53,7 +50,7 @@ class FailedRead(Exception):
 if __name__ == "__main__":
     import threading
 
-    def lidar():
+    def start():
         lidar_status = 0
         while True:
             if lidar_status == 0:

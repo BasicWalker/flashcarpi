@@ -29,7 +29,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setCursor(Qt.BlankCursor)
 ##        self.connection = obd.Async(fast=False, timeout=30)
         try:
-            self.connection = obd.OBD(fast=False, timeout=5)
+            self.connection = obd.OBD(fast=False, timeout=30)
         except:
             print("OBD not found")
             pass
@@ -88,8 +88,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def update_carfront(self):
         try:
             distance, frontspeedreading = readLidar()
-            self.distance.setProperty("value", distance)
-            self.frontspeed.setProperty("intValue", frontspeedreading)
+            self.distance.setProperty("value", int(distance))
+            self.frontspeed.setProperty("intValue", int(frontspeedreading))
 ##            self.dist_meter.setPixmap(QtGui.QPixmap(self.dist_meter_path(distance)))
 ##            self.frontcar.setGeometry(0, (10 - (int(distance) * 90 / 40)), 800, 640)
         except TypeError:
@@ -106,7 +106,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             speed = self.connection.query(obd.commands.SPEED).value.to("mph").magnitude
             rpm1 = self.connection.query(obd.commands.RPM).value.magnitude
             self.carspeed.setProperty("value", int(speed))
-            self.rpm.setProperty("value", (rpm1))
+            self.rpm.setProperty("value", int(rpm1))
             self.rpm_meter.setPixmap(QtGui.QPixmap(self.rpm_meter_path(rpm1)))
         
         except:

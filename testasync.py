@@ -18,36 +18,44 @@ import obd
 from Ui_MainWindow import Ui_MainWindow
 
 
+
+
 class WorkerSignals(QObject):
     '''
     Defines the signals available from a running worker thread.
 
     Supported signals are:
+
+    finished
+        No data
     
-    obd_status
-        `int` indicating stats 0 = off, 1 = on
+    error
+        `tuple` (exctype, value, traceback.format_exc() )
+    
+    result
+        `object` data returned from processing, anything
 
-    obd_reading
-        `tuple` (speed, rpm)
-
-    lidar_status
-        `int` indicating stats 0 = off, 1 = on
-
-    lidar_reading
-        `tuple` (speed, rpm)
+    progress
+        `int` indicating % progress 
 
     '''
-
     obd_status = pyqtSignal(int)
     obd_reading = pyqtSignal(tuple)
     lidar_status = pyqtSignal(int)
     lidar_reading = pyqtSignal(tuple)
 
+
 class obdWorker(QRunnable):
     '''
-    OBD Worker thread
+    Worker thread
 
     Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
+
+    :param callback: The function callback to run on this worker thread. Supplied args and 
+                     kwargs will be passed through to the runner.
+    :type callback: function
+    :param args: Arguments to pass to the callback function
+    :param kwargs: Keywords to pass to the callback function
 
     '''
 
@@ -56,7 +64,7 @@ class obdWorker(QRunnable):
         self.signals = WorkerSignals() 
         self.obd_try_counter = 0
         self.signals.obd_status = 0
-        print("init obd thread")   
+        print("init thread")   
 
     @pyqtSlot()
     def run(self):
@@ -108,9 +116,15 @@ class obdWorker(QRunnable):
 
 class lidarWorker(QRunnable):
     '''
-    Lidar Worker thread
+    Worker thread
 
     Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
+
+    :param callback: The function callback to run on this worker thread. Supplied args and 
+                     kwargs will be passed through to the runner.
+    :type callback: function
+    :param args: Arguments to pass to the callback function
+    :param kwargs: Keywords to pass to the callback function
 
     '''
 
@@ -120,7 +134,7 @@ class lidarWorker(QRunnable):
         self.lidar_try_counter = 0
         self.signals.lidar_status = 0
         self.serial_ports = [tuple(p) for p in list(serial.tools.list_ports.comports())]
-        print("init lidar thread")   
+        print("init thread")   
 
     @pyqtSlot()
     def run(self):
@@ -239,10 +253,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print("obd update failed")
 
     def obd_function(self):
-        print("Starting obd thread")
+        print("Starting thread")
 
     def lidar_function(self):
-        print("Starting lidar thread")
+        print("Starting thread")
  
     def obd_thread(self):
         # Pass the function to execute
