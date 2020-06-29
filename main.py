@@ -66,11 +66,11 @@ class obdWorker(QRunnable):
                 print("not connected")
                 try:
                     print("attempting to connect to obd")
-                    self.connection = obd.Async(fast=False, timeout=30)
-                    self.connection.watch(obd.commands.SPEED)
-                    self.connection.watch(obd.commands.RPM)
-                    self.connection.start()
-                    # self.connection = obd.OBD(fast=False, timeout=1)
+                    # self.connection = obd.Async(fast=False, timeout=30)
+                    # self.connection.watch(obd.commands.SPEED)
+                    # self.connection.watch(obd.commands.RPM)
+                    # self.connection.start()
+                    self.connection = obd.OBD(fast=False, timeout=30)
                 except Exception as e:
                     print(e)
                     self.obd_try_counter += 1
@@ -79,7 +79,7 @@ class obdWorker(QRunnable):
                         break
                     else:
                         print("obd connection attempt {} of 5 failed, trying again".format(self.obd_try_counter))
-                        time.sleep(5)
+                        time.sleep(1)
                         pass
                 else:
                     print("connected succesfully")
@@ -130,7 +130,7 @@ class lidarWorker(QRunnable):
                 print("not connected")
                 try:
                     print("attempting to connect to lidar")
-                    self.ser = serial.Serial("/dev/ttyUBS0", timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
+                    self.ser = serial.Serial("/dev/ttyUSB0", baudrate=115200)
                 except Exception as e:
                     print(e)
                     self.lidar_try_counter += 1
