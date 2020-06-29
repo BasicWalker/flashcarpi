@@ -28,7 +28,7 @@ def check(correct_port="ttyUSB0", interval=0.1):
 def connect(port="ttyUSB0"):
     global ser, lidar_status
     try:
-        ser = serial.Serial(f"/dev/{port}", timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
+        ser = serial.Serial("/dev/{}".format(port), timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
         ser.flushInput()
     except:
         lidar_status = 0
@@ -38,7 +38,7 @@ def connect(port="ttyUSB0"):
 class NoSerialConnection(Exception):
     def __init__(self, port):
         self.port = port
-        self.message = f'Arduino port {port} not found in serial ports'
+        self.message = 'Arduino port {} not found in serial ports'.format(port)
         super().__init__(self.message)
     pass
 
@@ -64,7 +64,7 @@ if __name__ == "__main__":
                 print("read failure")
             else:
                 distance, velocity = read()
-                print(f'distance: {distance}, velocity: {velocity}')
+                print('distance: {distance}, velocity: {velocity}').format(distance=distance, velocity=velocity)
 
 
             

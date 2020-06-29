@@ -78,7 +78,7 @@ class obdWorker(QRunnable):
                         print("reached max (5) attempts to connect, stopping attempts")
                         break
                     else:
-                        print(f"obd connection attempt {self.obd_try_counter} of 5 failed, trying again")
+                        print("obd connection attempt {} of 5 failed, trying again".format(self.obd_try_counter))
                         time.sleep(5)
                         pass
                 else:
@@ -130,7 +130,7 @@ class lidarWorker(QRunnable):
                 print("not connected")
                 try:
                     print("attempting to connect to lidar")
-                    self.ser = serial.Serial(f"/dev/ttyUBS0", timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
+                    self.ser = serial.Serial("/dev/ttyUBS0", timeout=None, baudrate=115200, xonxoff=False, rtscts=False, dsrdtr=False)
                 except Exception as e:
                     print(e)
                     self.lidar_try_counter += 1
@@ -138,7 +138,7 @@ class lidarWorker(QRunnable):
                         print("reached max (5) attempts to connect, stopping attempts")
                         break
                     else:
-                        print(f"obd connection attempt {self.lidar_try_counter} of 5 failed, trying again")
+                        print("obd connection attempt {} of 5 failed, trying again".format(self.lidar_try_counter))
                         time.sleep(5)
                         pass
                 else:
@@ -225,7 +225,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             self.distance.setProperty("value", 999)
             self.frontspeed.setProperty("Value", 999)
-            print("Lidar update failed")
+#            print("Lidar update failed")
 
     def update_car(self):
         try:
@@ -236,7 +236,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             self.carspeed.setProperty("value", 999)
             self.rpm.setProperty("value", 999)
-            print("obd update failed")
+#            print("obd update failed")
 
     def obd_function(self):
         print("Starting obd thread")
