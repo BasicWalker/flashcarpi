@@ -3,6 +3,7 @@ import traceback, sys
 import serial
 import serial.tools.list_ports
 from pathlib import Path
+import random
 
 
 from PyQt5.QtGui import *
@@ -17,30 +18,6 @@ import obd
 
 from Ui_MainWindow import Ui_MainWindow
 
-
-class WorkerSignals(QObject):
-    '''
-    Defines the signals available from a running worker thread.
-
-    Supported signals are:
-    
-    obd_status
-        `int` indicating stats 0 = off, 1 = on
-
-    obd_reading
-        `tuple` (speed, rpm)
-
-    lidar_status
-        `int` indicating stats 0 = off, 1 = on
-
-    lidar_reading
-        `tuple` (speed, rpm)
-
-    '''
-
-    obd_reading = pyqtSignal(tuple)
-    lidar_reading = pyqtSignal(tuple)
-
 class obdWorker(QRunnable):
     '''
     OBD Worker thread
@@ -49,15 +26,10 @@ class obdWorker(QRunnable):
 
     '''
 
-    def __init__(self, fn, *args, **kwargs):
+    def __init__(self, fn):
         super(obdWorker, self).__init__()
-        # Store constructor arguments (re-used for processing)
-        self.fn = fn
-        self.args = args
-        self.kwargs = kwargs
-        self.signals = WorkerSignals()
         self.obd_try_counter = 0
-        self.obd_status = 0
+        self.obd_status = 1
         print("init obd thread")   
 
     @pyqtSlot()
@@ -88,7 +60,9 @@ class obdWorker(QRunnable):
                     self.obd_status = 1
                     self.obd_try_counter = 0
                     while self.connection.is_connected():
+                        print("reading obd")
                         self.read()
+                        time.sleep(0.5)
                     else:
                         print("connection broken")
                         self.signal.obd_status = 0
@@ -97,17 +71,21 @@ class obdWorker(QRunnable):
                 print("connected succesfully")
                 self.obd_status = 1
                 self.obd_try_counter = 0
-                while self.connection.is_connected():
+                while True:
+                    print("reading lidar")
                     self.read()
+                    time.sleep(0.5)
                 else:
                     print("connection broken")
-                    self.signal.obd_status = 0
+                    self.obd_status = 0
                     break
     def read(self):
-        self.speed = self.connection.query(obd.commands.SPEED).value.to("mph").magnitude
-        self.rpm1 = self.connection.query(obd.commands.RPM).value.magnitude
-        self.signals.obd_reading.emit((speed, rpm1))
-        print("obd reading emitted")
+        speed = random.randint(0,100)
+        rpm1 = random.randint(0,100)
+        print("setting obd reading")
+        self.obd_speed = speed
+        self.obd_rpm1 = rpm1
+        print(self.obd_speed, self.obd_speed)
 
 class lidarWorker(QRunnable):
     '''
@@ -117,16 +95,10 @@ class lidarWorker(QRunnable):
 
     '''
 
-    def __init__(self, fn, *args, **kwargs):
-        super(lidarWorker, self).__init__()
-        # Store constructor arguments (re-used for processing)
-        self.fn = fn
-        self.args = args
-        self.kwargs = kwargs
-        self.signals = WorkerSignals()
-
+    def __init__(self, fn):
+        super(lidarWorker, self).__init__() 
         self.lidar_try_counter = 0
-        self.lidar_status = 0
+        self.lidar_status = 1
         self.serial_ports = [tuple(p) for p in list(serial.tools.list_ports.comports())]
         print("init lidar thread")   
 
@@ -154,7 +126,8 @@ class lidarWorker(QRunnable):
                     self.lidar_status = 1
                     self.obd_try_counter = 0
                     while self.check:
-                        self.read
+                        self.read()
+                        time.sleep(0.5)
                     else:
                         print("connection broken")
                         self.lidar_status = 0
@@ -163,8 +136,9 @@ class lidarWorker(QRunnable):
                 print("connected succesfully")
                 self.lidar_status = 1
                 self.obd_try_counter = 0
-                while self.check:
-                    self.read
+                while True:
+                    self.read()
+                    time.sleep(0.5)
                 else:
                     print("connection broken")
                     self.lidar_status = 0
@@ -172,16 +146,16 @@ class lidarWorker(QRunnable):
 
     def read(self):
         try:
-            self.distance, self.velocity = self.ser.readline().decode("utf-8").strip().split("|")
-            self.signals.lidar_reading.emit((self.distance, self.velocity))
-            print("lidar readings emitted")
+            distance = random.randint(0,100)
+            velocity = random.randint(0,100)
+            print("setting lidar reading")
+            self.lidar_velocity = velocity
+            self.lidar_distance = distance
+            print(self.lidar_distance, self.lidar_velocity)
         except Exception as e: print(e)
 
-    def check(self, correct_port="ttyUSB0"):
-            if correct_port not in serial_ports:
-                return 0
-            else:
-                return 1
+    def check(self):
+        return 1
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -192,9 +166,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton.clicked.connect(QCoreApplication.instance().quit)
         self.showFullScreen()
         self.setCursor(Qt.BlankCursor)
-        self.signals = WorkerSignals() 
         self.asset_path = Path('assets/')
-        self.speed = 0
+        self.obd_status = int()
+        self.obd_speed = int()
+        self.obd_rpm1 = int()
+        self.lidar_status = int()
+        self.lidar_velocity = int()
+        self.lidar_distance = int()
 
         self.show()
         self.threadpool = QThreadPool()
@@ -202,6 +180,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.obd_thread()
         self.lidar_thread()
+
+        self.timer = QTimer()
+        self.timer.setInterval(500)
+        self.timer.timeout.connect(self.update)
+        self.timer.start()
+
+    def update(self):
+        print("updating car")
+        self.update_car()
+        print("updating carfront")
+        self.update_carfront()
 
     def dist_meter_path(self, distance):
         nearest_dist = 2.5 * round(distance/2.5)
@@ -218,22 +207,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def update_carfront(self):
         try:
-            distance, velocity = self.signals.lidar_reading
+            distance = self.lidar_distance
+            velocity = self.lidar_velocity
+            speed = self.obd_speed
+            print("setting distance property")
             self.distance.setProperty("value", int(distance))
-            self.frontspeed.setProperty("value", int(velocity + self.speed ))
+            print("setting distance frontspeed property")
+            self.frontspeed.setProperty("value", int(velocity + speed ))
+            print("setting distance frontspeed property")
             self.dist_meter.setPixmap(QtGui.QPixmap(self.dist_meter_path(distance)))
-        except:
+            print("setting distance bars")
+        except Exception as e:
+            print(e)
             self.distance.setProperty("value", 999)
-            self.frontspeed.setProperty("Value", 999)
+            self.frontspeed.setProperty("value", 999)
             print("Lidar update failed")
 
     def update_car(self):
         try:
-            speed, rpm1 = self.signals.obd_reading
+            speed = self.obd_speed
+            rpm1 = self.obd_rpm1
             self.carspeed.setProperty("value", int(speed))
             self.rpm.setProperty("value", int(rpm1))
             self.rpm_meter.setPixmap(QtGui.QPixmap(self.rpm_meter_path(rpm1)))
-        except:
+        except Exception as e:
+            print(e)
             self.carspeed.setProperty("value", 999)
             self.rpm.setProperty("value", 999)
             print("obd update failed")
@@ -247,7 +245,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def obd_thread(self):
         # Pass the function to execute
         obd_worker = obdWorker(self.obd_function)
-        obd_worker.signals.obd_reading.connect(self.update_car)
         
         # Execute
         self.threadpool.start(obd_worker)
@@ -255,7 +252,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def lidar_thread(self):
         # Pass the function to execute
         lidar_worker = lidarWorker(self.lidar_function)
-        lidar_worker.signals.lidar_reading.connect(self.update_carfront)
         
         # Execute
         self.threadpool.start(lidar_worker)
@@ -263,6 +259,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == "__main__": 
+    # app = QApplication([])
+    # window = MainWindow()
+    # app.exec_()
+
     app = QApplication(sys.argv)
     Window = MainWindow()
     sys.exit(app.exec_()) 
