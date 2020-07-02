@@ -133,9 +133,9 @@ class lidarWorker(QRunnable):
     @pyqtSlot()
     def run(self):
         while True:
-            print("running")
+            print("lidat thread running")
             if self.lidar_status == 0:
-                print("not connected")
+                print("lidar not connected")
                 try:
                     print("attempting to connect to lidar")
                     self.ser = serial.Serial("/dev/ttyUSB0", baudrate=115200)
@@ -143,30 +143,30 @@ class lidarWorker(QRunnable):
                     print(e)
                     self.lidar_try_counter += 1
                     if self.lidar_try_counter >= 5:
-                        print("reached max (5) attempts to connect, stopping attempts")
+                        print("reached max (5) attempts to connect to lidar, stopping attempts")
                         break
                     else:
-                        print("obd connection attempt {} of 5 failed, trying again".format(self.lidar_try_counter))
-                        time.sleep(5)
+                        print("lidar connection attempt {} of 5 failed, trying again".format(self.lidar_try_counter))
+                        time.sleep(10)
                         pass
                 else:
-                    print("connected succesfully")
+                    print("lidar connected succesfully")
                     self.lidar_status = 1
                     self.obd_try_counter = 0
                     while self.check:
                         self.read
                     else:
-                        print("connection broken")
+                        print("lidar connection broken")
                         self.lidar_status = 0
                         break
             else:
-                print("connected succesfully")
+                print("lidar connected succesfully")
                 self.lidar_status = 1
                 self.obd_try_counter = 0
                 while self.check:
                     self.read
                 else:
-                    print("connection broken")
+                    print("lidar connection broken")
                     self.lidar_status = 0
                     break
 
@@ -175,7 +175,11 @@ class lidarWorker(QRunnable):
             self.distance, self.velocity = self.ser.readline().decode("utf-8").strip().split("|")
             self.signals.lidar_reading.emit((self.distance, self.velocity))
             print("lidar readings emitted")
-        except Exception as e: print(e)
+        except Exception as e: 
+            print(e)
+            self.distance = 0
+            self.velocity = 0
+            self.signals.lidar_reading.emit((self.distance, self.velocity))
 
     def check(self, correct_port="ttyUSB0"):
             if correct_port not in serial_ports:
