@@ -63,9 +63,9 @@ class obdWorker(QRunnable):
     @pyqtSlot()
     def run(self):
         while True:
-            print("running")
+            print("obd running")
             if self.obd_status == 0:
-                print("not connected")
+                print("obd not connected")
                 try:
                     print("attempting to connect to obd")
                     # self.connection = obd.Async(fast=False, timeout=30)
@@ -77,31 +77,31 @@ class obdWorker(QRunnable):
                     print(e)
                     self.obd_try_counter += 1
                     if self.obd_try_counter >= 5:
-                        print("reached max (5) attempts to connect, stopping attempts")
+                        print("reached max (5) attempts to connect to obd, stopping attempts")
                         break
                     else:
                         print("obd connection attempt {} of 5 failed, trying again".format(self.obd_try_counter))
                         time.sleep(1)
                         pass
                 else:
-                    print("connected succesfully")
+                    print("obd connected succesfully")
                     self.obd_status = 1
                     self.obd_try_counter = 0
                     while self.connection.is_connected():
                         self.read()
                     else:
-                        print("connection broken")
-                        self.signal.obd_status = 0
+                        print("obd connection broken")
+                        self.obd_status = 0
                         break
             else:
-                print("connected succesfully")
+                print("obd connected succesfully")
                 self.obd_status = 1
                 self.obd_try_counter = 0
                 while self.connection.is_connected():
                     self.read()
                 else:
-                    print("connection broken")
-                    self.signal.obd_status = 0
+                    print("obd connection broken")
+                    self.obd_status = 0
                     break
     def read(self):
         self.speed = self.connection.query(obd.commands.SPEED).value.to("mph").magnitude
