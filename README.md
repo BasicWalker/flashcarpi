@@ -43,7 +43,7 @@ venv\Scripts\activate
 >`\flashcarpi\venv\Scripts\pip.exe `
 
 # Install dependencies
-make sure loaction is set in the `flashcarpi/` folder and the (venv) is active.
+make sure location is set in the `flashcarpi/` folder and the (venv) is active.
 
 run `pip install -r requirements.txt`
 
