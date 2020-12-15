@@ -1,4 +1,6 @@
 # FlashCarPi
+![background for flashcarpi](https://github.com/BasicWalker/flashcarpi/blob/master/assets/flashretrobackground.jpg?raw=true)
+
 utilization of a raspberry pi as a dash unit within a car
 
 clone this environment to the RPi home directory
